@@ -1,0 +1,43 @@
+# FROM "snakemake/snakemake:main"
+# RUN /bin/sh -c "pip install azure-storage-blob"
+# RUN /bin/sh -c "apt-get update && apt-get install -y lsb-release && apt-get clean all"
+# RUN /bin/bash -c "apt-get update -y && apt-get upgrade -y && apt install -y dirmngr gnupg apt-transport-https ca-certificates software-properties-common"
+# RUN /bin/bash -c "apt-key adv --keyserver keyserver.ubuntu.com --recv-key 95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7 &&\
+# 	add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian $(lsb_release -cs)-cran40/'"
+# RUN /bin/bash -c "echo 'export LD_LIBRARY_PATH=/usr/lib/openblas-base/:$LD_LIBRARY_PATH' >> ~/.bashrc &&\
+# 	apt-get update -y && apt-get upgrade -y && apt install -y 'libcurl4-openssl-dev' 'libssl-dev' 'libxml2-dev' \
+# 		'build-essential' \
+#     	'libsodium-dev' 'libopenblas-dev' \
+#     	'sqlite' 'git' 'pigz' 'htop' \
+#     	'pandoc' \
+#     	'mariadb-server' 'libmariadbclient-dev'\
+#     	'r-base' 'apt-utils'"
+# RUN /bin/bash -c "pip install jill -U && jill install --confirm"
+# RUN R -e 'install.packages("BiocManager")'
+# RUN /bin/bash -c 'apt-get update -y && apt-get upgrade -y && apt install -y libcurl4-openssl-dev cmake'
+# RUN /bin/bash -c 'apt-get update -y && apt-get upgrade -y && apt install -y libnlopt-cxx-dev'
+# RUN /bin/bash -c 'curl -SL http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz | tar -xz -C . \
+#   && cd libiconv-1.16 \
+#   && ./configure --prefix=/usr/local \
+#   && make \
+#   && make install \
+#   && libtool --finish /usr/local/lib \
+#   && cd .. \
+#   && rm -rf libiconv-1.16'
+# RUN /bin/bash -c "echo 'export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH' >> ~/.bashrc"
+# RUN /bin/bash -c 'curl -SL h  https://github.com/unicode-org/icu/archive/refs/tags/release-68-2.tar.gz | tar -xz -C . \
+#   && cd icu-release-68-2/icu4c/source \
+#   && ./configure --prefix=/usr/local \
+#   && make \
+#   && make install \
+#   && libtool --finish /usr/local/lib \
+#   && cd .. \
+#   && rm -rf icu-release-68-2'
+# RUN /bin/bash -c 'LD_LIBRARY_PATH=/usr/local/lib/ R -e "BiocManager::install(c(\"devtools\"), Ncpus=20)"'
+# RUN /bin/bash -c "echo 'export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH' >> ~/.bash_profile"
+# RUN R -e 'BiocManager::install(c("lme4", "boot", "coop", "meta", "data.table", "RhpcBLASctl", "doRNG", "devtools"), Ncpus=20)'
+# RUN /bin/bash -c 'LD_LIBRARY_PATH=/usr/local/lib/ R -e "BiocManager::install(c(\"meta\"), Ncpus=20)"'
+# RUN /bin/bash -c 'LD_LIBRARY_PATH=/usr/local/lib/ R -e "BiocManager::install(c(\"PharmacoGx\"), Ncpus=20)"'
+# RUN /bin/bash -c 'LD_LIBRARY_PATH=/usr/local/lib/ R -e "devtools::install_github(\"bhklab/CoreGx\")"'
+# RUN /bin/bash -c 'LD_LIBRARY_PATH=/usr/local/lib/ R -e "devtools::install_github(\"bhklab/PharmacoGx\", ref=\"permutation_sigs_merge\")"'
+# RUN julia -e 'using Pkg; Pkg.add.(["MixedModels", "CSV", "DataFrames", "LinearAlgebra", "Statistics", "GLM", "Suppressor"])'
