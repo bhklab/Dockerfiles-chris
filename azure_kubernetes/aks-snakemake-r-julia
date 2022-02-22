@@ -42,9 +42,13 @@ RUN Rscript -e \
     'pkgs <- c("remotes", "lme4", "boot", "coop", "meta", "data.table", \
         "RhpcBLASctl", "doRNG"); \
     pak::pkg_install(pkgs);'
-# RUN Rscript -e \
-#     'pkgs <- c("bhklab/CoreGx", "bhklab/PharmacoGx@permutation_sigs_merge"); \
-#     pak::pkg_install(pkgs);'
+RUN Rscript -e \
+    'pkgs <- c("bhklab/CoreGx", "bhklab/PharmacoGx@permutation_sigs_merge"); \
+    pak::pkg_install(pkgs);'
 
 # -- Julia using PyPy script
-# RUN pip install jill -U && jill install --confirm
+RUN pip install jill -U && jill install --confirm
+RUN julia -e \
+    'using Pkg; \
+    Pkg.add.(["MixedModels", "CSV", "DataFrames", "LinearAlgebra", \
+        "Statistics", "GLM", "Suppressor"])'
