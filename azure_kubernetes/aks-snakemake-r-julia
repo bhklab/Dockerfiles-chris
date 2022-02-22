@@ -1,5 +1,15 @@
 FROM snakemake/snakemake:main
-SHELL ["/bin/sh", "-c"]
+SHELL ["/bin/bash", "-c"]
+
+# Make sure conda shared C libraries are used
+RUN echo \
+    'export LD_LIBRARY_PATH=/opt/conda/lib:$CONDA_PREFIX/lib:$LD_LIBRARY_PATH' >> \
+    ~/.bashrc
+RUN source ~/.bashrc
+
+# -- Python
+# Install Python dependencies
+RUN pip install azure-storage-blob
 
 # -- R
 # Install R system requirements
@@ -15,7 +25,9 @@ RUN apt-get install -y \
     libxml2-dev \
     build-essential \
     libsodium-dev \
-    libopenblas-dev
+    libopenblas-dev \
+    libiconv-hook-dev \
+    libc6-dev
 # Install R using apt
 RUN apt-key adv \
     --keyserver keyserver.ubuntu.com \
@@ -30,14 +42,9 @@ RUN Rscript -e \
     'install.packages("pak", dependencies=TRUE, ask=FALSE);'
 RUN Rscript -e \
     'pak::pkg_install("BiocManager");'
-RUN Rscript -e \
-    'pkgs <- c("remotes", "lme4", "boot", "coop", "meta", "data.table", \
-        "RhpcBLASctl", "doRNG"); \
-    pak::pkg_install(pkgs);'
+# RUN Rscript -e \
+#     'pkgs <- c("remotes", "lme4", "boot", "coop", "meta", "data.table", \
+#         "RhpcBLASctl", "doRNG"); \
+#     pak::pkg_install(pkgs);'
 
 # -- Julia
-
-
-# -- Python
-# Install Python dependencies
-RUN pip install azure-storage-blob
