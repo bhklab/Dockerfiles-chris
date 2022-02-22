@@ -1,11 +1,8 @@
 FROM snakemake/snakemake:main
-SHELL ["/bin/bash", "-c"]
+SHELL ["/bin/sh", "-c"]
 
 # Make sure conda shared C libraries are used
-RUN echo \
-    'export LD_LIBRARY_PATH=/opt/conda/lib:$CONDA_PREFIX/lib:$LD_LIBRARY_PATH' >> \
-    ~/.bashrc
-RUN source ~/.bashrc
+ENV LD_LIBRARY_PATH=/opt/conda/lib:/opt/conda/envs/snakemake/lib
 
 # -- Python
 # Install Python dependencies
@@ -26,8 +23,7 @@ RUN apt-get install -y \
     build-essential \
     libsodium-dev \
     libopenblas-dev \
-    libiconv-hook-dev \
-    libc6-dev
+    libnlopt-dev
 # Install R using apt
 RUN apt-key adv \
     --keyserver keyserver.ubuntu.com \
@@ -42,9 +38,13 @@ RUN Rscript -e \
     'install.packages("pak", dependencies=TRUE, ask=FALSE);'
 RUN Rscript -e \
     'pak::pkg_install("BiocManager");'
+RUN Rscript -e \
+    'pkgs <- c("remotes", "lme4", "boot", "coop", "meta", "data.table", \
+        "RhpcBLASctl", "doRNG"); \
+    pak::pkg_install(pkgs);'
 # RUN Rscript -e \
-#     'pkgs <- c("remotes", "lme4", "boot", "coop", "meta", "data.table", \
-#         "RhpcBLASctl", "doRNG"); \
+#     'pkgs <- c("bhklab/CoreGx", "bhklab/PharmacoGx@permutation_sigs_merge"); \
 #     pak::pkg_install(pkgs);'
 
-# -- Julia
+# -- Julia using PyPy script
+# RUN pip install jill -U && jill install --confirm
