@@ -2,12 +2,14 @@
 
 ## ILOG CPLEX
 
-For this build to work a version of the IBM ILOG CPLEX and an installer
-file must be present in the same directory as the Dockerfile.
+For this build to work a version of the IBM ILOG CPLEX and an
+`installer.properties` file must be present in the same directory as the
+Dockerfile.
 
-An academic license can be obtained for [IBM ILOG CPLEX](https://www.ibm.com/ca-en/products/ilog-cplex-optimization-studio) by students and
-researchers with a University associated email. Once you register and are
-approved, you can download the IBM ILOG CPLEX binary from the IBM website.
+An academic license can be obtained for
+IBM ILOG CPLEX by students and researchers with a University associated email.
+Once you register and are approved, you can download the IBM ILOG CPLEX binary
+from the [IBM website](https://www.ibm.com/ca-en/products/ilog-cplex-optimization-studio).
 
 ## Dockerfile
 
@@ -16,5 +18,24 @@ first need to generate an `installer.properties` file. This can be accomplished
 by running:
 
 ```
-./<path/to/CPLEX_binary> -r
+./<path/to/CPLEX_binary> -r <path/to/directory_with_dockerfile>
+```
+
+**NOTE:** Running the CPLEX binary requires Java. On Ubuntu this can be
+installed with `sudo apt-get install default-jre` if it is not already
+available.
+
+This will take your user input for the installation and output them into
+a file, which can be read inside the Docker image to allow non-interactive
+selection of install options.
+
+This step is already run inside the Dockerfile, but FYI:
+To install CPLEX non-interactively run:
+```
+./<path/to/CPLEX_binary> -f <path/to/installer.properties> -i silent
+```
+
+For more information about CPLEX binary options see:
+```
+./<path/to/CPLEX_binary> -h
 ```
