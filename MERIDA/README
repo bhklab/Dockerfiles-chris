@@ -1,0 +1,4 @@
+# Instructions
+
+For this build to work a version of the IBP ILOG CPLEX and an installer
+file must be present in the same directory as the Dockerfile.

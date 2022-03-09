@@ -1,16 +1,48 @@
 FROM snakemake/snakemake:main
 SHELL ["/bin/sh", "-c"]
 
-# Make sure conda shared C libraries are used
-ENV LD_LIBRARY_PATH=/opt/conda/lib:/opt/conda/envs/snakemake/lib
+# -- Java, prerequisite to run CPLEX binary
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install -y default-jre
 
-# -- Python
-# Install Python dependencies
-RUN pip install azure-storage-blob
-
-# -- Compile IBM ILOG CPLEX
-COPY $HOME/ILOG_COS_20.10_LINUX_X86_64.bin ./CPLEX.bin
-COPY $HOME/installer.properties ./installer.properties
+# -- Install IBM ILOG CPLEX from binary
+# COPY files must be in same directory as Dockerfile
+COPY ILOG_COS_20.10_LINUX_X86_64.bin ./CPLEX.bin
+COPY installer.properties ./installer.properties
 
 RUN chmod +x ./CPLEX.bin
-RUN ./CPLEX.bin -i silent -f ./installer.properites
+RUN ./CPLEX.bin -f ./installer.properties -i silent
+
+# this needs to match the path in installer.properties
+ENV CPLEX_HOME=/usr/local/bin/CPLEX_Studio201
+
+# setup CPLEX python API bindings
+
+# -- Clone and compile MERIDA
+# system dependencies
+RUN apt-get install -y \
+    build-essential \
+    gcc \
+    libssl-dev \
+    cmake \
+    curl \
+    libboost-all-dev \
+    qt5-default \
+    libeigen3-dev
+
+
+RUN git clone https://github.com/bhklab/MERIDA.git && \
+    mkdir -p MERIDA/build && \
+    cd MERIDA/build && \
+    cmake -DCPLEX_PATH=$CPLEX_HOME -INCLUDE=/usr/local/include/eigen3/ .. && \
+    make && \
+    ln -s `pwd`/MERIDA_ILP /usr/local/bin/MERIDA_ILP && \
+    cd ../..
+
+
+# -- Python
+# setup CPLEX python API bindings
+
+# Install Python dependencies
+RUN pip install azure-storage-blob
