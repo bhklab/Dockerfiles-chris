@@ -31,11 +31,13 @@ RUN apt-get install -y \
     qt5-default \
     libeigen3-dev
 
+# # set path to eigen3 header files
+ENV EIGEN_PATH=/usr/include/eigen3
 
 RUN git clone https://github.com/bhklab/MERIDA.git && \
     mkdir -p MERIDA/build && \
     cd MERIDA/build && \
-    cmake -DCPLEX_PATH=$CPLEX_HOME -INCLUDE=/usr/local/include/eigen3/ .. && \
+    cmake -DEIGEN_PATH=$EIGEN_PATH -DCPLEX_PATH=$CPLEX_HOME .. && \
     make && \
     ln -s `pwd`/MERIDA_ILP /usr/local/bin/MERIDA_ILP && \
     cd ../..
