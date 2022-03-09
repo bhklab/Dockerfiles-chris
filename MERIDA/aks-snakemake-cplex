@@ -1,0 +1,16 @@
+FROM snakemake/snakemake:main
+SHELL ["/bin/sh", "-c"]
+
+# Make sure conda shared C libraries are used
+ENV LD_LIBRARY_PATH=/opt/conda/lib:/opt/conda/envs/snakemake/lib
+
+# -- Python
+# Install Python dependencies
+RUN pip install azure-storage-blob
+
+# -- Compile IBM ILOG CPLEX
+COPY $HOME/ILOG_COS_20.10_LINUX_X86_64.bin ./CPLEX.bin
+COPY $HOME/installer.properties ./installer.properties
+
+RUN chmod +x ./CPLEX.bin
+RUN ./CPLEX.bin -i silent -f ./installer.properites
