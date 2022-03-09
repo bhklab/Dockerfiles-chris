@@ -18,6 +18,7 @@ RUN ./CPLEX.bin -f ./installer.properties -i silent
 ENV CPLEX_HOME=/usr/local/bin/CPLEX_Studio201
 
 # setup CPLEX python API bindings
+RUN python $CPLEX_HOME/python/setup.py install
 
 # -- Clone and compile MERIDA
 # system dependencies

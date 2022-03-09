@@ -1,0 +1,20 @@
+# Instructions
+
+## ILOG CPLEX
+
+For this build to work a version of the IBM ILOG CPLEX and an installer
+file must be present in the same directory as the Dockerfile.
+
+An academic license can be obtained for [IBM ILOG CPLEX](https://www.ibm.com/ca-en/products/ilog-cplex-optimization-studio) by students and
+researchers with a University associated email. Once you register and are
+approved, you can download the IBM ILOG CPLEX binary from the IBM website.
+
+## Dockerfile
+
+Since IBM ILOG CPLEX will need to be installed non-interactively, you will
+first need to generate an `installer.properties` file. This can be accomplished
+by running:
+
+```
+./<path/to/CPLEX_binary> -r
+```
