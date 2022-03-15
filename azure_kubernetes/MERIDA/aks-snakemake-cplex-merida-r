@@ -1,5 +1,5 @@
 FROM snakemake/snakemake:main
-SHELL ["/bin/sh", "-c"]
+SHELL ["/bin/bash", "-c"]
 
 # -- Java, prerequisite to run CPLEX binary
 RUN apt-get update -y && \
@@ -17,6 +17,8 @@ RUN ./CPLEX.bin -f ./installer.properties -i silent
 # this needs to match the path in installer.properties
 ENV CPLEX_HOME=/usr/local/bin/CPLEX_Studio201
 
+RUN chmod +x $CPLEX_HOME
+
 # setup CPLEX python API bindings
 RUN python $CPLEX_HOME/python/setup.py install
 
@@ -32,17 +34,20 @@ RUN apt-get install -y \
     qt5-default \
     libeigen3-dev
 
+
 # set path to eigen3 header files
 ENV EIGEN_PATH=/usr/include/eigen3
 
 RUN git clone https://github.com/bhklab/MERIDA.git && \
-    mkdir -p MERIDA/build && \
-    cd MERIDA/build && \
+    cp -rL MERIDA /opt/MERIDA && \
+    mkdir -p /opt/MERIDA/build && \
+    cd /opt/MERIDA/build && \
     cmake -DEIGEN_PATH=$EIGEN_PATH -DCPLEX_PATH=$CPLEX_HOME .. && \
     make && \
-    ln -s `pwd`/MERIDA_ILP /usr/local/bin/MERIDA_ILP && \
-    cd ../..
+    cp -rL `pwd`/MERIDA_ILP /usr/local/bin/MERIDA_ILP && \
+    cd -
 
+RUN chmod +x /usr/local/bin/MERIDA_ILP
 
 # -- Python
 
@@ -51,7 +56,7 @@ RUN pip install azure-storage-blob
 
 # -- R
 # Make sure conda shared C libraries are used
-ENV LD_LIBRARY_PATH=/opt/conda/lib:/opt/conda/envs/snakemake/lib
+#ENV LD_LIBRARY_PATH=/opt/conda/lib:/opt/conda/envs/snakemake/lib
 
 # Install R using apt
 RUN apt-get install -y \
@@ -59,7 +64,9 @@ RUN apt-get install -y \
     apt-transport-https \
     software-properties-common \
     lsb-release \
-    libncurses6
+    libncurses6 \
+    libiconv-hook-dev \
+    libtinfo5
 
 RUN apt-key adv \
     --keyserver keyserver.ubuntu.com \
